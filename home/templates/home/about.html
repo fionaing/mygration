@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<div class="p-3">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-md-6 mx-auto mb-3">
+        <h2>About</h2>
+        <hr />
+        <p>Mygration is a website where birders can plan birding trips with others. Once a user is registered,
+            they can find information on recent bird sightings around a trail and weather forecasts for the area.
+            Users can add a bio to their public profile. Users can create a birding plan with information on the trail
+            that they will follow, when they will go, and a description with additional information about the trip. A
+            user can also post their planned trip publicly. By doing this, other users can join this user on their trip
+            and give their opinion on the plan.</p>
+        <p>Make planning bird walks and meeting other birders easier with Mygration!</p>
+      </div>
+      <div class="col-md-6 mx-auto mb-3 text-center">
+        <img src="{% static 'img/about.jpg' %}" class="max-width-100" alt="about" />
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
