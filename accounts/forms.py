@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from django.forms.utils import ErrorList
 from django.utils.safestring import mark_safe
+from django import forms
+from .models import Profile
 
 # Customizes how errors w/ password/username are shown
 class CustomErrorList(ErrorList):
@@ -17,3 +19,11 @@ class CustomUserCreationForm(UserCreationForm):
             self.fields[fieldname].help_text = None
             # bootstrap class that improves fields
             self.fields[fieldname].widget.attrs.update({'class': 'form-control'})
+
+
+class UpdateProfileForm(forms.ModelForm):
+    bio = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+
+    class Meta:
+        model = Profile
+        fields = ['bio']

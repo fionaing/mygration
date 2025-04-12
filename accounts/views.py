@@ -5,6 +5,9 @@ from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib import messages
+
+from .forms import UpdateProfileForm
 
 # Create your views here.
 def signup(request):
@@ -72,9 +75,24 @@ def logout(request):
     return redirect('home.index')
 
 @login_required
-def orders(request):
+def plans(request):
     template_data = {}
-    template_data['title'] = 'Orders'
-    template_data['orders'] = request.user.order_set.all()
-    return render(request, 'accounts/orders.html',
+    template_data['title'] = 'Plans'
+    template_data['plans'] = request.user.plan_set.all()
+    return render(request, 'accounts/plans.html',
         {'template_data': template_data})
+
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect(to='accounts.profile')
+    else:
+        profile_form = UpdateProfileForm(instance=request.user.profile)
+
+    return render(request, 'accounts/profile.html', {'profile_form': profile_form})
+
