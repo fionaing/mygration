@@ -68,3 +68,4 @@ def dashboard(request):
         'created_plans': created_plans,
         'joined_plans': joined_plans,
     })
+

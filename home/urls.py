@@ -10,3 +10,4 @@ urlpatterns = [
     path('plans/<int:id>/join/', views.join_plan, name='plan.join'),
     path('plans/<int:id>/comment/', views.add_comment, name='plan.comment'),
 ]
+
