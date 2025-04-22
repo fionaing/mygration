@@ -101,6 +101,17 @@ def profile(request):
     return render(request, 'accounts/profile.html', {'profile_form': profile_form})
 
 
+
+@login_required
+def user_plans(request):
+    plans = (
+        Plan.objects
+        .filter(user=request.user)
+        .order_by("-date")  # newest → oldest
+    )
+    return render(request, "accounts/plans.html", {"plans": plans})
+
+
 @login_required
 def add_plan(request):
     if request.method == "POST":

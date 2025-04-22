@@ -1,58 +1,42 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<div class="p-3">
-  <div class="container">
-    <div class="row mt-3">
-      <div class="col mx-auto mb-3">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 class="mb-0">My Plans</h2>
+<div class="container py-4">
+  <div class="row mt-3">
+    <div class="col mx-auto mb-3">
 
-          <!-- adjust the URL name as needed -->
-          <a href="{% url 'accounts.add_plan' %}" class="btn btn-primary">
-            Add Plan
-          </a>
-        </div>
-        <hr />
-        {% for order in template_data.orders %}
-        <div class="card mb-4">
-          <div class="card-header">
-            Order #{{ order.id }}
-          </div>
-          <div class="card-body">
-            <b>Date:</b> {{ order.date }}<br />
-            <b>Total:</b> ${{ order.total }}<br />
-            <table class="table table-bordered
-              table-striped text-center mt-3">
-              <thead>
-                <tr>
-                  <th scope="col">Item ID</th>
-                  <th scope="col">Movie</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Quantity</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in order.item_set.all %}
-                <tr>
-                  <td>{{ item.movie.id }}</td>
-                  <td>
-                    <a class="link-dark"
-                      href="{% url 'movies.show'
-                      id=item.movie.id %}">
-                      {{ item.movie.name }}
-                    </a>
-                  </td>
-                  <td>${{ item.movie.price }}</td>
-                  <td>{{ item.quantity }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        {% endfor %}
+
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">My Plans</h2>
+        <a href="{% url 'accounts.add_plan' %}" class="btn btn-primary">
+          Add Plan
+        </a>
       </div>
+      <hr />
+
+      {% if plans %}
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Location</th>
+              <th scope="col">Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for plan in plans %}
+              <tr>
+                <td>{{ plan.name }}</td>
+                <td>{{ plan.location }}</td>
+                <td>{{ plan.date|date:"Y-m-d H:i" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="text-muted">You don’t have any plans yet.</p>
+      {% endif %}
+
     </div>
   </div>
 </div>
-{% endblock content %}
+{% endblock %}
