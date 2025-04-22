@@ -1,0 +1,23 @@
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Your Dashboard</h2>
+
+  <h4>Your Created Plans</h4>
+  {% for plan in created_plans %}
+    <p><a href="{% url 'plan.show' plan.id %}">{{ plan.name }}</a></p>
+  {% empty %}
+    <p>You haven't created any plans.</p>
+  {% endfor %}
+
+  <h4>Plans You've Joined</h4>
+  {% for plan in joined_plans %}
+    <p><a href="{% url 'plan.show' plan.id %}">{{ plan.name }}</a></p>
+  {% empty %}
+    <p>You haven't joined any plans.</p>
+  {% endfor %}
+</div>
+{% endblock %}
+
+
