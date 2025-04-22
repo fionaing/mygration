@@ -22,7 +22,7 @@ Created when a user joins another person’s plan
 """
 class Joined(models.Model):
     id = models.AutoField(primary_key=True) # automatically created id
-    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)  # plan its associated w/ - plan id
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, related_name='join_records')
     user = models.ForeignKey(User, on_delete=models.CASCADE) # user who created plan - user id
 
     def __str__(self):

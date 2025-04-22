@@ -10,7 +10,24 @@
   <div class="container">
     <div class="row mt-3">
       <div class="col mx-auto text-center mb-3">
-        <h4>Welcome to the best movie store!!</h4>
+        <h4>Welcome to Mygration!!</h4>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <div class="col mx-auto">
+        <h5 class="text-center">Available Plans</h5>
+        {% if template_data.plans %}
+          <ul class="list-group">
+            {% for plan in template_data.plans %}
+              <li class="list-group-item">
+                <strong>{{ plan.name }}</strong> – {{ plan.description }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-center">No plans available.</p>
+        {% endif %}
       </div>
     </div>
   </div>
