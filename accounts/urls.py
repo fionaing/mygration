@@ -8,4 +8,5 @@ urlpatterns = [
     path('plans/', views.plans, name='accounts.plans'),
     path('reset_password/', views.reset_password, name='accounts.reset_password'),
     path('profile/', views.profile, name='accounts.profile'),
+    path('add_plan/', views.add_plan, name='accounts.add_plan')
 ]

@@ -1,0 +1,15 @@
+{# templates/accounts/add_plan.html #}
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4 col-lg-6">
+  <h1 class="mb-4">Create Plan</h1>
+
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.as_p }}
+
+    <button class="btn btn-primary mt-2" type="submit">Submit Plan</button>
+  </form>
+</div>
+{% endblock %}

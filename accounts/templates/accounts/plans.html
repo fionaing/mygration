@@ -4,7 +4,14 @@
   <div class="container">
     <div class="row mt-3">
       <div class="col mx-auto mb-3">
-        <h2>My Orders</h2>
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="mb-0">My Plans</h2>
+
+          <!-- adjust the URL name as needed -->
+          <a href="{% url 'accounts.add_plan' %}" class="btn btn-primary">
+            Add Plan
+          </a>
+        </div>
         <hr />
         {% for order in template_data.orders %}
         <div class="card mb-4">

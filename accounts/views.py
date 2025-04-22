@@ -1,15 +1,19 @@
 from django.shortcuts import render
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.forms import SetPasswordForm
-from .forms import CustomUserCreationForm, CustomErrorList
+from .forms import CustomUserCreationForm, CustomErrorList, PlanForm
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
 from .forms import UpdateProfileForm
+from .forms import PlanForm
 
-# Create your views here.
+from home.models import Plan
+
+
+# Create your views here
 def signup(request):
     template_data = {}
     template_data['title'] = 'Sign Up'
@@ -95,4 +99,19 @@ def profile(request):
         profile_form = UpdateProfileForm(instance=request.user.profile)
 
     return render(request, 'accounts/profile.html', {'profile_form': profile_form})
+
+
+@login_required
+def add_plan(request):
+    if request.method == "POST":
+        form = PlanForm(request.POST, request.FILES)
+        if form.is_valid():
+            plan = form.save(commit=False)
+            plan.user = request.user        # link the logged‑in user
+            plan.save()
+            return redirect("accounts.plans")  # after save go to /plans/
+    else:
+        form = PlanForm()
+
+    return render(request, "accounts/add_plan.html", {"form": form})
 
