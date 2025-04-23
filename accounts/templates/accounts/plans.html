@@ -4,7 +4,6 @@
   <div class="row mt-3">
     <div class="col mx-auto mb-3">
 
-
       <div class="d-flex justify-content-between align-items-center">
         <h2 class="mb-0">My Plans</h2>
         <a href="{% url 'accounts.add_plan' %}" class="btn btn-primary">
@@ -17,9 +16,10 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Location</th>
-              <th scope="col">Created</th>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Created</th>
+              <th class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -28,6 +28,23 @@
                 <td>{{ plan.name }}</td>
                 <td>{{ plan.location }}</td>
                 <td>{{ plan.date|date:"Y-m-d H:i" }}</td>
+
+                <!-- action buttons -->
+                <td class="text-end">
+                  <a href="{% url 'accounts.edit_plan' plan.pk %}"
+                     class="btn btn-sm btn-outline-primary me-2">
+                    Edit
+                  </a>
+
+                  <form action="{% url 'accounts.delete_plan' plan.pk %}"
+                        method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="btn btn-sm btn-outline-danger">
+                      Delete
+                    </button>
+                  </form>
+                </td>
               </tr>
             {% endfor %}
           </tbody>

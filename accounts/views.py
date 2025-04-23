@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.forms import SetPasswordForm
 from .forms import CustomUserCreationForm, CustomErrorList, PlanForm
@@ -126,3 +126,22 @@ def add_plan(request):
 
     return render(request, "accounts/add_plan.html", {"form": form})
 
+@login_required
+def edit_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk, user=request.user)
+    if request.method == "POST":
+        form = PlanForm(request.POST, request.FILES, instance=plan)
+        if form.is_valid():
+            form.save()
+            return redirect("accounts.plans")
+    else:
+        form = PlanForm(instance=plan)
+    return render(request, "accounts/add_plan.html",
+                  {"form": form, "editing": True})
+
+@login_required
+def delete_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk, user=request.user)
+    if request.method == "POST":
+        plan.delete()
+    return redirect("accounts.plans")

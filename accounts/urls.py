@@ -8,5 +8,7 @@ urlpatterns = [
     path('plans/', views.user_plans, name='accounts.plans'),
     path('reset_password/', views.reset_password, name='accounts.reset_password'),
     path('profile/', views.profile, name='accounts.profile'),
-    path('add_plan/', views.add_plan, name='accounts.add_plan')
+    path('add_plan/', views.add_plan, name='accounts.add_plan'),
+    path('plan/<int:pk>/edit/', views.edit_plan, name="accounts.edit_plan"),
+    path('plan/<int:pk>/delete/', views.delete_plan, name="accounts.delete_plan"),
 ]
