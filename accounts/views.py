@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
-from django.contrib.auth.forms import SetPasswordForm
-from .forms import CustomUserCreationForm, CustomErrorList, PlanForm
+from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from.models import Warning
 from .forms import UpdateProfileForm
 from .forms import PlanForm
 
@@ -98,7 +98,9 @@ def profile(request):
     else:
         profile_form = UpdateProfileForm(instance=request.user.profile)
 
-    return render(request, 'accounts/profile.html', {'profile_form': profile_form})
+    warning_data = {}
+    warning_data['warnings'] = Warning.objects.filter(user=request.user)
+    return render(request, 'accounts/profile.html', {'profile_form': profile_form, 'warning_data': warning_data})
 
 
 
@@ -145,3 +147,4 @@ def delete_plan(request, pk):
     if request.method == "POST":
         plan.delete()
     return redirect("accounts.plans")
+

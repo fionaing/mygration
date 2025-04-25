@@ -27,6 +27,15 @@
                 </button>
               </div>
             </form>
+            <h2> Warnings </h2>
+            <p>
+                {% for w in warning_data.warnings %}
+                    <h4> {{ w.category }}</h4>
+                    <p> {{ w.warning }}</p>
+                {% empty %}
+                    <p>You have no warnings!</p>
+                {% endfor %}
+            </p>
           </div>
         </div>
       </div>
