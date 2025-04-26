@@ -5,13 +5,6 @@ from .models import Plan, Joined, Comment
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
-'''i made a new version of this, i think this can be deleted
-def index(request):
-    template_data = {}
-    template_data['title'] = 'Movies Store'
-    return render(request, 'home/index.html', {'template_data': template_data})
-'''
-
 def about(request):
     template_data = {}
     template_data['title'] = 'About'
