@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ profile_user.username }}'s Profile</h2>
+
+  {% if profile_user.profile.bio %}
+    <p><strong>Bio:</strong> {{ profile_user.profile.bio }}</p>
+  {% else %}
+    <p><em>No bio available.</em></p>
+  {% endif %}
+
+  <h4 class="mt-4">Plans Created:</h4>
+
+  {% if user_plans %}
+    <div class="row">
+      {% for plan in user_plans %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="{% url 'plans.show' plan.id %}" class="text-decoration-none">
+                  {{ plan.name }}
+                </a>
+              </h5>
+              <h6 class="card-subtitle mb-2 text-muted">
+                Location: {{ plan.location }}
+              </h6>
+              <p class="card-text">
+                {{ plan.description|truncatewords:20 }}
+              </p>
+              <p class="card-text">
+                <small class="text-muted">Created on: {{ plan.date|date:"F j, Y" }}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No plans created yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

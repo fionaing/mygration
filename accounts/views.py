@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import get_user_model
 
 from.models import Warning
 from .forms import UpdateProfileForm
@@ -14,6 +15,8 @@ from .forms import UpdateProfileForm
 from home.models import Plan, Joined
 
 from django.views.decorators.http import require_POST
+
+User = get_user_model()
 
 # Create your views here
 def signup(request):
@@ -104,7 +107,13 @@ def profile(request):
     warning_data['warnings'] = Warning.objects.filter(user=request.user)
     return render(request, 'accounts/profile.html', {'profile_form': profile_form, 'warning_data': warning_data})
 
-
+def view_profile(request, id):
+    profile_user = get_object_or_404(User, id=id)
+    user_plans = Plan.objects.filter(user=profile_user)  # 👈 THIS must be exactly here
+    return render(request, 'accounts/view_profile.html', {
+        'profile_user': profile_user,
+        'user_plans': user_plans
+    })
 
 @login_required
 def user_plans(request):
