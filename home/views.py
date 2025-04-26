@@ -17,9 +17,9 @@ Searching for plans
 def index(request):
     search_term = request.GET.get('search')
     if search_term:
-        plans = Plan.objects.filter(name__icontains=search_term)
+        plans = Plan.objects.filter(name__icontains=search_term, public=True)
     else:
-        plans = Plan.objects.all()
+        plans = Plan.objects.filter(public=True)
 
     template_data = {}
     template_data['name'] = 'Plans'
@@ -55,7 +55,7 @@ def add_comment(request, id):
     if request.method == 'POST':
         text = request.POST.get('text')
         plan = get_object_or_404(Plan, id=id)
-        Comment.objects.create(user=request.user, plan=plan, text=text)
+        Comment.objects.create(user=request.user, plan=plan, comment=text)
     return redirect('plan.show', id=id)
 
 @login_required

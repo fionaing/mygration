@@ -132,6 +132,7 @@ def add_plan(request):
         if form.is_valid():
             plan = form.save(commit=False)
             plan.user = request.user        # link the logged‑in user
+            plan.public = request.POST['public']
             plan.save()
             return redirect("accounts.plans")  # after save go to /plans/
     else:

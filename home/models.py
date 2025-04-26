@@ -11,7 +11,8 @@ class Plan(models.Model):
     location = models.CharField(max_length=255) #txt field for location
     date = models.DateTimeField(auto_now_add=True) # set date
     description = models.TextField() # txt field for description
-    joined = models.CharField(max_length=255) # txt field to add whos joined
+    joined = models.IntegerField(default=0) # number of people who joined
+    public = models.BooleanField(default=True)
     image = models.ImageField(upload_to='plan_images/')
 
     def __str__(self):

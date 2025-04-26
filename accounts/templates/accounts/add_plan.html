@@ -31,6 +31,12 @@
           {{ form.description.errors }}
         </div>
 
+        <div class="mb-3">
+          <label for="{{ form.public.id_for_label }}" class="form-label">Public </label>
+          <input type="checkbox" name="public" id="public" value="{{ form.public }}" >
+          {{ form.public.errors }}
+        </div>
+
         {# clean “Choose new image” input (no redundant current-url line) #}
         <div class="mb-3">
           <label for="id_image" class="form-label">Choose New Image (Optional)</label>
