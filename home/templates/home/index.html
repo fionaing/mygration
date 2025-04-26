@@ -19,11 +19,11 @@
         <h5 class="text-center">Available Plans</h5>
         {% if template_data.plans %}
           <ul class="list-group">
-            {% for plan in template_data.plans %}
-              <li class="list-group-item">
-                <strong>{{ plan.name }}</strong> – {{ plan.description }}
-              </li>
-            {% endfor %}
+              {% for plan in template_data.plans %}
+                <a href="{% url 'plan.show' plan.id %}" class="list-group-item list-group-item-action">
+                  <strong>{{ plan.name }}</strong> – {{ plan.description }}
+                </a>
+              {% endfor %}
           </ul>
         {% else %}
           <p class="text-center">No plans available.</p>

@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from .forms import PlanForm
 from .models import Plan, Joined, Comment
 from django.contrib.auth.decorators import login_required
 '''i made a new version of this, i think this can be deleted
@@ -68,4 +70,51 @@ def dashboard(request):
         'created_plans': created_plans,
         'joined_plans': joined_plans,
     })
+
+
+
+
+@login_required
+def user_plans(request):
+    plans = (
+        Plan.objects
+        .filter(user=request.user)
+        .order_by("-date")  # newest → oldest
+    )
+    return render(request, "accounts/plans.html", {"plans": plans})
+
+
+@login_required
+def add_plan(request):
+    if request.method == "POST":
+        form = PlanForm(request.POST, request.FILES)
+        if form.is_valid():
+            plan = form.save(commit=False)
+            plan.user = request.user        # link the logged‑in user
+            plan.save()
+            return redirect("accounts.plans")  # after save go to /plans/
+    else:
+        form = PlanForm()
+
+    return render(request, "accounts/add_plan.html", {"form": form})
+
+@login_required
+def edit_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk, user=request.user)
+    if request.method == "POST":
+        form = PlanForm(request.POST, request.FILES, instance=plan)
+        if form.is_valid():
+            form.save()
+            return redirect("accounts.plans")
+    else:
+        form = PlanForm(instance=plan)
+    return render(request, "accounts/add_plan.html",
+                  {"form": form, "editing": True})
+
+@login_required
+def delete_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk, user=request.user)
+    if request.method == "POST":
+        plan.delete()
+    return redirect("accounts.plans")
 

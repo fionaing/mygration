@@ -8,7 +8,6 @@ from django.contrib import messages
 
 from.models import Warning
 from .forms import UpdateProfileForm
-from .forms import PlanForm
 
 from home.models import Plan
 
