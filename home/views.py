@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from .forms import PlanForm
 from .models import Plan, Joined, Comment
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+
 '''i made a new version of this, i think this can be deleted
 def index(request):
     template_data = {}
@@ -32,14 +36,17 @@ def index(request):
 """
 Showing plan
 """
+@login_required
 def show(request, id):
     plan = Plan.objects.get(id=id)
     comments = Comment.objects.filter(plan=plan)
+    joined = Joined.objects.filter(plan=plan, user=request.user).exists()
 
     template_data = {}
     template_data['name'] = plan.name
     template_data['plan'] = plan
     template_data['comments'] = comments
+    template_data['joined'] = joined
     # TODO need to implement html stuff for below to work! vvv
     return render(request, 'home/show.html', {'template_data': template_data})
 
@@ -68,4 +75,59 @@ def dashboard(request):
         'created_plans': created_plans,
         'joined_plans': joined_plans,
     })
+
+
+
+
+@login_required
+def user_plans(request):
+    created_plans = Plan.objects.filter(user=request.user).order_by("-date")
+    joined_plans = Plan.objects.filter(join_records__user=request.user).exclude(user=request.user).order_by("-date")
+
+    return render(request, "accounts/plans.html", {
+        "created_plans": created_plans,
+        "joined_plans": joined_plans
+    })
+
+
+@login_required
+def add_plan(request):
+    if request.method == "POST":
+        form = PlanForm(request.POST, request.FILES)
+        if form.is_valid():
+            plan = form.save(commit=False)
+            plan.user = request.user        # link the logged‑in user
+            plan.save()
+            return redirect("accounts.plans")  # after save go to /plans/
+    else:
+        form = PlanForm()
+
+    return render(request, "accounts/add_plan.html", {"form": form})
+
+@login_required
+def edit_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk, user=request.user)
+    if request.method == "POST":
+        form = PlanForm(request.POST, request.FILES, instance=plan)
+        if form.is_valid():
+            form.save()
+            return redirect("accounts.plans")
+    else:
+        form = PlanForm(instance=plan)
+    return render(request, "accounts/add_plan.html",
+                  {"form": form, "editing": True})
+
+@login_required
+@require_POST
+def leave_plan(request, id):
+    plan = get_object_or_404(Plan, id=id)
+    Joined.objects.filter(plan=plan, user=request.user).delete()
+    return redirect("accounts.plans")
+
+@login_required
+@require_POST
+def delete_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk, user=request.user)
+    plan.delete()
+    return redirect('accounts.plans')
 

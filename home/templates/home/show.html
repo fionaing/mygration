@@ -9,10 +9,14 @@
   <p><strong>Joined:</strong> {{ template_data.plan.joined }}</p>
 
   {% if user.is_authenticated %}
-    <form action="{% url 'plan.join' template_data.plan.id %}" method="post" class="mb-3">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-primary">Join this Plan</button>
-    </form>
+      {% if not template_data.joined %}
+        <form action="{% url 'plan.join' template_data.plan.id %}" method="post" class="mb-3">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-primary">Join this Plan</button>
+        </form>
+      {% else %}
+        <p class="text-success"><strong>You’ve already joined this plan.</strong></p>
+      {% endif %}
   {% else %}
     <p><a href="{% url 'login' %}">Log in</a> to join this plan.</p>
   {% endif %}
