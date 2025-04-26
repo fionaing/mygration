@@ -27,9 +27,11 @@
   {% for comment in template_data.comments %}
     <div class="mb-2 {% if comment.user == user %}p-2 bg-light border rounded{% endif %}">
       <strong>
-        {{ comment.user.username }}
+        <a href="{% url 'accounts.profile.view' comment.user.id %}" class="text-decoration-none">
+          {{ comment.user.username }}
+        </a>
         {% if comment.user == user %}(You){% endif %}
-     </strong>:
+      </strong>:
       {{ comment.comment }}
     </div>
   {% empty %}

@@ -13,5 +13,5 @@ urlpatterns = [
     path('plan/<int:pk>/edit/', views.edit_plan, name="accounts.edit_plan"),
     path('plan/<int:pk>/delete/', views.delete_plan, name="accounts.delete_plan"),
     path('plans/<int:id>/leave/', views.leave_plan, name='plan.leave'),
-
+    path('profile/<int:id>/', views.view_profile, name='accounts.profile.view'),
 ]
