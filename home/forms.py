@@ -15,5 +15,5 @@ class PlanForm(forms.ModelForm):
             "location":    forms.TextInput(attrs={"class": "form-control"}),
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
             "image":       forms.ClearableFileInput(attrs={"class": "form-control"}),
-            "public": forms.CheckboxInput(attrs={"class": "form-control"}),
+            "public":      forms.CheckboxInput(attrs={"class": "form-control"}),
         }

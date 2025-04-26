@@ -48,6 +48,8 @@ def join_plan(request, id):
     plan = get_object_or_404(Plan, id=id)
     if not Joined.objects.filter(plan=plan, user=request.user).exists():
         Joined.objects.create(plan=plan, user=request.user)
+        plan.joined = plan.joined + 1
+        plan.save()
     return redirect('plan.show', id=id)
 
 @login_required
@@ -115,6 +117,8 @@ def edit_plan(request, pk):
 def leave_plan(request, id):
     plan = get_object_or_404(Plan, id=id)
     Joined.objects.filter(plan=plan, user=request.user).delete()
+    plan.joined = plan.joined - 1
+    plan.save()
     return redirect("accounts.plans")
 
 @login_required
