@@ -9,6 +9,9 @@ urlpatterns = [
     path('plans/<int:id>/', views.show, name='plan.show'),
     path('plans/<int:id>/join/', views.join_plan, name='plan.join'),
     path('plans/<int:id>/comment/', views.add_comment, name='plan.comment'),
+    path('plans/<int:id>/leave/', views.leave_plan, name='plan.leave'),
+    path('my-plans/', views.user_plans, name='accounts.plans')
+
 
 ]
 

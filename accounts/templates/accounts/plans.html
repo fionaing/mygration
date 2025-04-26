@@ -1,59 +1,38 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<div class="container py-4">
-  <div class="row mt-3">
-    <div class="col mx-auto mb-3">
+<div class="container mt-4">
+  <h2>My Plans</h2>
 
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">My Plans</h2>
-        <a href="{% url 'accounts.add_plan' %}" class="btn btn-primary">
-          Add Plan
+  <h4>Plans I Created</h4>
+  {% if created_plans %}
+    <ul class="list-group mb-4">
+      {% for plan in created_plans %}
+        <a href="{% url 'plan.show' plan.id %}" class="list-group-item list-group-item-action">
+          <strong>{{ plan.name }}</strong> – {{ plan.description }}
         </a>
-      </div>
-      <hr />
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You haven't created any plans.</p>
+  {% endif %}
 
-      {% if plans %}
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Location</th>
-              <th>Created</th>
-              <th class="text-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for plan in plans %}
-              <tr>
-                <td>{{ plan.name }}</td>
-                <td>{{ plan.location }}</td>
-                <td>{{ plan.date|date:"Y-m-d H:i" }}</td>
-
-                <!-- action buttons -->
-                <td class="text-end">
-                  <a href="{% url 'accounts.edit_plan' plan.pk %}"
-                     class="btn btn-sm btn-outline-primary me-2">
-                    Edit
-                  </a>
-
-                  <form action="{% url 'accounts.delete_plan' plan.pk %}"
-                        method="post" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit"
-                            class="btn btn-sm btn-outline-danger">
-                      Delete
-                    </button>
-                  </form>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <p class="text-muted">You don’t have any plans yet.</p>
-      {% endif %}
-
-    </div>
-  </div>
+  <h4>Plans I Joined</h4>
+    {% if joined_plans %}
+      <ul class="list-group">
+        {% for plan in joined_plans %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'plan.show' plan.id %}" class="flex-grow-1 me-3">
+              <strong>{{ plan.name }}</strong> – {{ plan.description }}
+            </a>
+            <form action="{% url 'plan.leave' plan.id %}" method="post" style="margin: 0;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger">Leave</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>You haven't joined any other plans.</p>
+    {% endif %}
 </div>
 {% endblock %}
