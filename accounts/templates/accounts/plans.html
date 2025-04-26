@@ -1,15 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-4">
-  <h2>My Plans</h2>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="mb-0">My Plans</h2>
+        <a href="{% url 'accounts.add_plan' %}" class="btn btn-primary">
+          Add Plan
+        </a>
+    </div>
+    <hr />
+
 
   <h4>Plans I Created</h4>
   {% if created_plans %}
     <ul class="list-group mb-4">
       {% for plan in created_plans %}
-        <a href="{% url 'plan.show' plan.id %}" class="list-group-item list-group-item-action">
-          <strong>{{ plan.name }}</strong> – {{ plan.description }}
-        </a>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'plan.show' plan.id %}" class="flex-grow-1 me-3">
+            <strong>{{ plan.name }}</strong> – {{ plan.description }}
+          </a>
+          <form action="{% url 'plan.delete' plan.id %}" method="post" style="margin: 0;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </li>
       {% endfor %}
     </ul>
   {% else %}
@@ -34,5 +48,6 @@
     {% else %}
       <p>You haven't joined any other plans.</p>
     {% endif %}
+
 </div>
 {% endblock %}

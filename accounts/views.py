@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
+
+from home.forms import PlanForm
 from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -9,8 +11,9 @@ from django.contrib import messages
 from.models import Warning
 from .forms import UpdateProfileForm
 
-from home.models import Plan
+from home.models import Plan, Joined
 
+from django.views.decorators.http import require_POST
 
 # Create your views here
 def signup(request):
@@ -145,5 +148,12 @@ def delete_plan(request, pk):
     plan = get_object_or_404(Plan, pk=pk, user=request.user)
     if request.method == "POST":
         plan.delete()
+    return redirect("accounts.plans")
+
+@login_required
+@require_POST
+def leave_plan(request, id):
+    plan = get_object_or_404(Plan, id=id)
+    Joined.objects.filter(plan=plan, user=request.user).delete()
     return redirect("accounts.plans")
 

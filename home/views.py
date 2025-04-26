@@ -124,3 +124,10 @@ def leave_plan(request, id):
     Joined.objects.filter(plan=plan, user=request.user).delete()
     return redirect("accounts.plans")
 
+@login_required
+@require_POST
+def delete_plan(request, pk):
+    plan = get_object_or_404(Plan, pk=pk, user=request.user)
+    plan.delete()
+    return redirect('accounts.plans')
+
