@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
 from .forms import PlanForm
 from .models import Plan, Joined, Comment
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 def about(request):
     template_data = {}
@@ -124,3 +124,14 @@ def delete_plan(request, pk):
     plan.delete()
     return redirect('accounts.plans')
 
+@login_required
+@require_POST
+def add_comment(request, id):
+    plan = get_object_or_404(Plan, id=id)
+    text = request.POST.get('text')
+    if text:
+        Comment.objects.create(user=request.user, plan=plan, comment=text)
+        messages.success(request, "Your comment was posted successfully!")
+    else:
+        messages.error(request, "You must write something to post a comment.")
+    return redirect('plan.show', id=id)

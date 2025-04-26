@@ -43,6 +43,15 @@
       </div>
     </nav>
     <!-- Header -->
+    {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 
     <div>
       {% block content %}
@@ -66,5 +75,18 @@
       </div>
     </section>
     <!-- Footer -->
+    <!-- Auto-hide Flash Messages after 3 seconds -->
+    <script>
+      setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+          alert.style.transition = "opacity 0.5s ease";
+          alert.style.opacity = '0';
+          setTimeout(() => {
+            alert.remove();
+          }, 500);
+        });
+      }, 3000);
+    </script>
   </body>
 </html>
