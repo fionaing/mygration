@@ -25,8 +25,12 @@
 
   <h4>Comments</h4>
   {% for comment in template_data.comments %}
-    <div class="mb-2">
-      <strong>{{ comment.user.username }}:</strong> {{ comment.text }}
+    <div class="mb-2 {% if comment.user == user %}p-2 bg-light border rounded{% endif %}">
+      <strong>
+        {{ comment.user.username }}
+        {% if comment.user == user %}(You){% endif %}
+     </strong>:
+      {{ comment.comment }}
     </div>
   {% empty %}
     <p>No comments yet.</p>
