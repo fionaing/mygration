@@ -16,7 +16,7 @@
     <ul class="list-group mb-4">
       {% for plan in created_plans %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
-          <a href="{% url 'plan.show' plan.id %}" class="flex-grow-1 me-3">
+          <a href="{% url 'accounts.edit_plan' plan.id %}" class="flex-grow-1 me-3">
             <strong>{{ plan.name }}</strong> – {{ plan.description }}
           </a>
           <form action="{% url 'plan.delete' plan.id %}" method="post" style="margin: 0;">

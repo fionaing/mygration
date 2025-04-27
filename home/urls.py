@@ -12,6 +12,7 @@ urlpatterns = [
     path('plans/<int:id>/leave/', views.leave_plan, name='plan.leave'),
     path('my-plans/', views.user_plans, name='accounts.plans'),
     path('add-plan/', views.add_plan, name='accounts.add_plan'),
+    path('plan/<int:pk>/edit/', views.edit_plan, name="accounts.edit_plan"),
     path('plans/<int:pk>/delete/', views.delete_plan, name='plan.delete'),
 
 ]

@@ -110,6 +110,8 @@ def edit_plan(request, pk):
     if request.method == "POST":
         form = PlanForm(request.POST, request.FILES, instance=plan)
         if form.is_valid():
+            plan = form.save(commit=False)
+            plan.user = request.user        # link the logged‑in user
             form.save()
             return redirect("accounts.plans")
     else:
