@@ -12,7 +12,7 @@ class Plan(models.Model):
     date = models.DateTimeField(auto_now_add=True) # set date
     description = models.TextField() # txt field for description
     joined = models.IntegerField(default=0) # number of people who joined
-    public = models.BooleanField(default=True)
+    public = models.BooleanField(default=False)
     image = models.ImageField(upload_to='plan_images/')
 
     def __str__(self):
