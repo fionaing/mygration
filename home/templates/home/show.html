@@ -7,59 +7,84 @@
       height: 30vh;
       margin: 20px;
       padding: 10px;
-      overflow-x: scroll; /* Horizontal scroll */
-      overflow-y: scroll; /* Vertical scroll */
+      overflow-x: scroll;
+      overflow-y: scroll;
   }
 </style>
 
 <div class="container mt-4">
-  <h2>{{ template_data.plan.name }}</h2>
-  <p id="loc"><strong>Location:</strong> {{ template_data.plan.location }}</p>
-  <p><strong>Date:</strong> {{ template_data.plan.date }}</p>
-  <p><strong>Description:</strong> {{ template_data.plan.description }}</p>
-  <p><strong>Joined:</strong> {{ template_data.plan.joined }}</p>
+  <div class="d-flex flex-wrap gap-4">
+    <div class="flex-grow-1" style="min-width:250px;">
+      <h2>{{ template_data.plan.name }}</h2>
+      <p id="loc"><strong>Location:</strong> {{ template_data.plan.location }}</p>
+      <p><strong>Date:</strong> {{ template_data.plan.date }}</p>
+      <p><strong>Description:</strong> {{ template_data.plan.description }}</p>
+      <p><strong>Joined:</strong> {{ template_data.plan.joined }}</p>
 
-    <script>
-        const loc = "{{template_data.plan.location}}";
-        var lat = loc.substring(0, loc.indexOf(","));
-        var lng = loc.substring(loc.indexOf(",") + 1)
-        ebird_url = 'https://api.ebird.org/v2/data/obs/geo/recent?key=6p8ts7valgcq&lat=' + lat + '&lng=' + lng;
-      fetch(ebird_url)
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error("Ebird network response not ok: " + ebird_url);
-              }
-              return response.json();
+      <script>
+        const loc = "{{ template_data.plan.location }}";
+        const [lat, lng] = [loc.split(',')[0], loc.split(',')[1]];
+        const ebird_url =
+          `https://api.ebird.org/v2/data/obs/geo/recent?key=6p8ts7valgcq&lat=${lat}&lng=${lng}`;
+
+        fetch(ebird_url)
+          .then(r => { if (!r.ok) throw new Error("Ebird response not ok"); return r.json(); })
+          .then(d => {
+            const ul = document.getElementById('observations');
+            ul.innerHTML = '';
+            d.forEach(b => ul.insertAdjacentHTML('beforeend', `<li>${b.comName}</li>`));
           })
-          .then(data => {
-              document.getElementById('observations').innerHTML = ''
-              for (var bird in data) {
-                document.getElementById('observations').innerHTML += '<li>' + data[bird].comName + '</li>';
-              }
-          })
-          .catch(error => {
-              console.error('Error: ', error);
-          });
-    </script>
-  <p><strong>Recent Sightings: </strong></p>
-    <div class="bird-list">
-        <div class = "bird-content">
-            <ul id="observations"></ul>
+          .catch(console.error);
+      </script>
+
+      <p class="mt-3"><strong>Recent Sightings:</strong></p>
+      <div class="bird-list mb-4">
+        <div class="bird-content">
+          <ul id="observations"></ul>
         </div>
+      </div>
     </div>
 
-  <div id="map" style="height: 400px; width: 100%; margin: 20px 0;"></div>
+    {% if template_data.weather_data %}
+      <div class="mx-auto" style="min-width:220px; display: flex; align-items: center; justify-content: center;">
 
+        <div class="card shadow-sm p-3 text-center" style="width: 260px; height: 320px">
+          <h5 class="mb-1">Weather</h5>
+          <small class="text-muted mb-2 d-block">Currently</small>
 
+          <h2 class="mb-0">
+            {{ template_data.weather_data.temperature }}{{ template_data.weather_data.temp_unit }}
+          </h2>
+
+          <div class="mt-2 small">
+            Feels&nbsp;like&nbsp;{{ template_data.weather_data.feels_like }}{{ template_data.weather_data.temp_unit }}<br>
+            Wind&nbsp;{{ template_data.weather_data.windspeed }} {{ template_data.weather_data.wind_unit }}<br>
+            Humidity&nbsp;{{ template_data.weather_data.humidity }}%
+          </div>
+
+          <div class="w-100 mt-3">
+            {% for d in template_data.weather_data.daily %}
+              <div class="d-flex justify-content-between">
+                <span><strong>{{ d.date }}</strong></span>
+                <span>{{ d.tempmax }}° / {{ d.tempmin }}°</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    {% endif %}
+  </div>
+  <div id="map" style="height: 400px; width: 100%; margin: 30px 0;"></div>
   {% if user.is_authenticated %}
-      {% if not template_data.joined %}
-        <form action="{% url 'plan.join' template_data.plan.id %}" method="post" class="mb-3">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary">Join this Plan</button>
-        </form>
-      {% else %}
-        <p class="text-success"><strong>You’ve already joined this plan.</strong></p>
-      {% endif %}
+    {% if not template_data.joined %}
+      <form action="{% url 'plan.join' template_data.plan.id %}" method="post" class="mb-3">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Join this Plan</button>
+      </form>
+    {% else %}
+      <p class="text-success"><strong>You’ve already joined this plan.</strong></p>
+    {% endif %}
   {% else %}
     <p><a href="{% url 'login' %}">Log in</a> to join this plan.</p>
   {% endif %}
@@ -72,9 +97,8 @@
       <strong>
         <a href="{% url 'accounts.profile.view' comment.user.id %}" class="text-decoration-none">
           {{ comment.user.username }}
-        </a>
-        {% if comment.user == user %}(You){% endif %}
-      </strong>:
+        </a>{% if comment.user == user %}(You){% endif %}:
+      </strong>
       {{ comment.comment }}
     </div>
   {% empty %}
@@ -93,27 +117,16 @@
     <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
   {% endif %}
 </div>
+
 <script>
   function initMap() {
-    const locationString = "{{ template_data.plan.location }}";
-    const parts = locationString.split(',');
-    const lat = parseFloat(parts[0]);
-    const lng = parseFloat(parts[1]);
-
-    const location = { lat: lat, lng: lng };
-    const map = new google.maps.Map(document.getElementById('map'), {
-      center: location,
-      zoom: 12
-    });
-
-    new google.maps.Marker({
-      position: location,
-      map: map
-    });
+    const [lat, lng] = "{{ template_data.plan.location }}".split(',').map(parseFloat);
+    const map = new google.maps.Map(document.getElementById('map'), { center: {lat, lng}, zoom: 12 });
+    new google.maps.Marker({ position: {lat, lng}, map });
   }
 </script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQYjXSQEpfulzI-ZEeiXRUe3lzgeC2aIw&callback=initMap" async defer></script>
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQYjXSQEpfulzI-ZEeiXRUe3lzgeC2aIw&callback=initMap"
+  async defer>
+</script>
 {% endblock %}
-
-

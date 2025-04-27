@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from mygration.helper_functions.fetch_weather_data import fetch_weather_data
 from .forms import PlanForm
 from .models import Plan, Joined, Comment
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
+from mygration.helper_functions.fetch_weather_data import fetch_weather_data
 
 def about(request):
     template_data = {}
@@ -40,6 +43,8 @@ def show(request, id):
     template_data['plan'] = plan
     template_data['comments'] = comments
     template_data['joined'] = joined
+    template_data['weather_data'] = fetch_weather_data(plan)
+    print(template_data['weather_data'])
     # TODO need to implement html stuff for below to work! vvv
     return render(request, 'home/show.html', {'template_data': template_data})
 
