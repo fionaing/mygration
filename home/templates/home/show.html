@@ -1,14 +1,55 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+  .bird-list {
+      width: 40vw;
+      height: 30vh;
+      margin: 20px;
+      padding: 10px;
+      overflow-x: scroll; /* Horizontal scroll */
+      overflow-y: scroll; /* Vertical scroll */
+  }
+</style>
+
 <div class="container mt-4">
   <h2>{{ template_data.plan.name }}</h2>
-  <p><strong>Location:</strong> {{ template_data.plan.location }}</p>
+  <p id="loc"><strong>Location:</strong> {{ template_data.plan.location }}</p>
   <p><strong>Date:</strong> {{ template_data.plan.date }}</p>
   <p><strong>Description:</strong> {{ template_data.plan.description }}</p>
   <p><strong>Joined:</strong> {{ template_data.plan.joined }}</p>
 
+    <script>
+        const loc = "{{template_data.plan.location}}";
+        var lat = loc.substring(0, loc.indexOf(","));
+        var lng = loc.substring(loc.indexOf(",") + 1)
+        ebird_url = 'https://api.ebird.org/v2/data/obs/geo/recent?key=6p8ts7valgcq&lat=' + lat + '&lng=' + lng;
+      fetch(ebird_url)
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error("Ebird network response not ok: " + ebird_url);
+              }
+              return response.json();
+          })
+          .then(data => {
+              document.getElementById('observations').innerHTML = ''
+              for (var bird in data) {
+                document.getElementById('observations').innerHTML += '<li>' + data[bird].comName + '</li>';
+              }
+          })
+          .catch(error => {
+              console.error('Error: ', error);
+          });
+    </script>
+  <p><strong>Recent Sightings: </strong></p>
+    <div class="bird-list">
+        <div class = "bird-content">
+            <ul id="observations"></ul>
+        </div>
+    </div>
+
   <div id="map" style="height: 400px; width: 100%; margin: 20px 0;"></div>
+
 
   {% if user.is_authenticated %}
       {% if not template_data.joined %}
