@@ -8,6 +8,8 @@
   <p><strong>Description:</strong> {{ template_data.plan.description }}</p>
   <p><strong>Joined:</strong> {{ template_data.plan.joined }}</p>
 
+  <div id="map" style="height: 400px; width: 100%; margin: 20px 0;"></div>
+
   {% if user.is_authenticated %}
       {% if not template_data.joined %}
         <form action="{% url 'plan.join' template_data.plan.id %}" method="post" class="mb-3">
@@ -50,7 +52,27 @@
     <p><a href="{% url 'login' %}">Log in</a> to comment.</p>
   {% endif %}
 </div>
+<script>
+  function initMap() {
+    const locationString = "{{ template_data.plan.location }}";
+    const parts = locationString.split(',');
+    const lat = parseFloat(parts[0]);
+    const lng = parseFloat(parts[1]);
 
+    const location = { lat: lat, lng: lng };
+    const map = new google.maps.Map(document.getElementById('map'), {
+      center: location,
+      zoom: 12
+    });
+
+    new google.maps.Marker({
+      position: location,
+      map: map
+    });
+  }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQYjXSQEpfulzI-ZEeiXRUe3lzgeC2aIw&callback=initMap" async defer></script>
 {% endblock %}
 
 
