@@ -24,6 +24,12 @@
           {{ form.name.errors }}
         </div>
 
+        <div class="mb-3">
+          <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+          {{ form.date }}
+          {{ form.date.errors }}
+        </div>
+
         <!-- Location with map api -->
         <div class="mb-3">
           <label for="id_location" class="form-label">Location (click on the map)</label>
@@ -70,6 +76,8 @@
         {% else %}
           <div class="mt-md-2 text-muted fst-italic">No image yet.</div>
         {% endif %}
+
+        <h1>Recent Sightings</h1>
 
       </div>
 

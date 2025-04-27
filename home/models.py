@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.timezone import now
 
 """
 Info relating to a plan.
@@ -9,7 +10,7 @@ class Plan(models.Model):
     name = models.CharField(max_length=255) # plan name
     user = models.ForeignKey(User, on_delete=models.CASCADE) # user who created plan
     location = models.CharField(max_length=255) #txt field for location
-    date = models.DateTimeField(auto_now_add=True) # set date
+    date = models.DateTimeField(default=now) # set date
     description = models.TextField() # txt field for description
     joined = models.IntegerField(default=0) # number of people who joined
     public = models.BooleanField(default=False)

@@ -109,7 +109,7 @@ def profile(request):
 
 def view_profile(request, id):
     profile_user = get_object_or_404(User, id=id)
-    user_plans = Plan.objects.filter(user=profile_user)  # 👈 THIS must be exactly here
+    user_plans = Plan.objects.filter(user=profile_user, public=True)  # 👈 THIS must be exactly here
     return render(request, 'accounts/view_profile.html', {
         'profile_user': profile_user,
         'user_plans': user_plans

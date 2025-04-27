@@ -9,9 +9,10 @@ from home.models import Plan
 class PlanForm(forms.ModelForm):
     class Meta:
         model = Plan
-        fields = ["name", "location", "description", "image", "public"]
+        fields = ["name", "date", "location", "description", "image", "public"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
+            "date": forms.DateTimeInput(attrs={"class": "form-control"}),
             "location": forms.TextInput(attrs={"class": "form-control"}),
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 4}),
             "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
