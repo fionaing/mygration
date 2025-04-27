@@ -13,7 +13,7 @@ class Plan(models.Model):
     description = models.TextField() # txt field for description
     joined = models.IntegerField(default=0) # number of people who joined
     public = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='plan_images/')
+    image = models.ImageField(upload_to='plan_images/', blank=True, null=True)
 
     def __str__(self):
         return str(self.id) + ' - ' + self.name
